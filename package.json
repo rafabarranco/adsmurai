@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "cy:open": "cypress open",
     "cy": "cypress run",
-    "test": "vitest"
+    "test": "vitest",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,md}"
   },
   "dependencies": {
     "axios": "^1.7.4",
@@ -31,6 +32,7 @@
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
     "jsdom": "^25.0.0",
+    "prettier": "^3.3.3",
     "sass": "^1.77.8",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.0",
