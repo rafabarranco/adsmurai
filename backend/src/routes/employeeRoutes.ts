@@ -147,6 +147,7 @@ router.get('/employees/:id', async (req: Request, res: Response) => {
     } else {
       res.status(404).json({ error: 'Employee not found' });
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     res.status(500).json({ error: 'Error fetching employee' });
   }
@@ -176,6 +177,7 @@ router.post('/employees', async (req: Request, res: Response) => {
   try {
     const employee = await Employee.create(req.body);
     res.status(201).json(employee);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     res.status(400).json({ error: 'Error creating employee' });
   }
@@ -221,6 +223,7 @@ router.put('/employees/:id', async (req: Request, res: Response) => {
     } else {
       res.status(404).json({ error: 'Employee not found' });
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     res.status(400).json({ error: 'Error updating employee' });
   }
