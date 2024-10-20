@@ -99,9 +99,18 @@ const router = Router();
 router.get('/employees', async (req: Request, res: Response) => {
   try {
     const employees = await Employee.findAll({
-      attributes: ['id', 'firstName', 'lastName', 'hireDate', 'email', 'salary', 'role']
+      attributes: [
+        'id',
+        'firstName',
+        'lastName',
+        'hireDate',
+        'email',
+        'salary',
+        'role',
+      ],
     });
     res.json(employees);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     res.status(500).json({ error: 'Error fetching employees' });
   }
@@ -204,7 +213,7 @@ router.post('/employees', async (req: Request, res: Response) => {
 router.put('/employees/:id', async (req: Request, res: Response) => {
   try {
     const [updated] = await Employee.update(req.body, {
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
     if (updated) {
       const updatedEmployee = await Employee.findByPk(req.params.id);
