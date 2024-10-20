@@ -1,9 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import Employee from './Employees.tsx';
+
+import AppRouter from './core/Router/index.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Employee />
+    <AppRouter />
   </StrictMode>,
 );
