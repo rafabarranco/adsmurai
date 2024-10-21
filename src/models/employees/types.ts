@@ -4,11 +4,15 @@ export interface Employee {
   id: string;
   firstName: string;
   lastName: string;
-  hireDate: string;
   email: string;
-  salary: number;
-  totalSalary: number;
+  department?: string;
   role: EmployeeRole;
+  salary: number;
+  picture?: string;
+  hireDate: string;
+  dismissalDate?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface UseEmployeesResult {
