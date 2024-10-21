@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import EmployeeDetail from './EmployeeDetail';
+import EmployeeDetail from '../Details';
 import { vi, expect } from 'vitest';
 
 test('renders', () => {

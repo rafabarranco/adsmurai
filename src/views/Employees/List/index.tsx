@@ -1,36 +1,114 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react';
+import { FC, ReactElement, useEffect, useRef, useState } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+} from '@mui/material';
+
+import useEmployees from '../../../models/employees/useEmployees';
+
+import getDaysFromDate from '../../../utils/dates/getDaysFromDate';
+
+import { Employee } from '../../../models/employees/types';
+import { useNavigate } from 'react-router-dom';
+
+const EmployeesList: FC = (): ReactElement => {
+  const firstLaunch = useRef(true);
+  const navigate = useNavigate();
+
+  const { getEmployees } = useEmployees();
+
+  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
+
+  const onHandleClick = (id: string) => {
+    navigate(`${id}`);
+  };
+
+  const fetchData = async () => {
+    const data = await getEmployees();
+    setEmployeeList(data);
+  };
+
+  useEffect(() => {
+    if (firstLaunch.current) {
+      fetchData();
+      firstLaunch.current = false;
+    }
+  }, []);
+
+  return (
+    <TableContainer component={Paper} elevation={3}>
+      <Typography variant="h5" component="h2" sx={{ padding: 2 }}>
+        Employee List
+      </Typography>
+      <Table aria-label="Employee list table">
+        <TableHead>
+          <TableRow>
+            <TableCell align="left">Name</TableCell>
+            <TableCell align="center">Days since hired</TableCell>
+            <TableCell align="center">Email</TableCell>
+            <TableCell align="center">Salary</TableCell>
+            <TableCell align="center">Role</TableCell>
+            <TableCell align="center"></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {employeeList.map(
+            ({ id, email, firstName, lastName, hireDate, salary, role }) => (
+              <TableRow key={id}>
+                <TableCell align="left">
+                  {firstName} {lastName}
+                </TableCell>
+                <TableCell align="center">
+                  {getDaysFromDate(hireDate)}
+                </TableCell>
+                <TableCell align="center">{email}</TableCell>
+                <TableCell align="center">{salary}</TableCell>
+                <TableCell align="center">{role}</TableCell>
+                <TableCell align="center" onClick={() => onHandleClick(id)}>
+                  Details
+                </TableCell>
+              </TableRow>
+            ),
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+export default EmployeesList;
+
+/* import { useEffect, useState } from 'react';
 import './App.scss';
-import axios from 'axios';
-import React from 'react';
+
 import EmployeeDetail from './EmployeeDetail';
 import { DataProvider } from './Context';
-
-const instance = axios.create({
-  baseURL: 'http://localhost:3000/api/',
-  timeout: 1000,
-});
+import useEmployees from './models/employees/useEmployees';
+import { Employee } from './models/employees/types';
 
 const Employees = (): React.ReactElement => {
-  const [data, setData] = useState<any>([]);
-  const [employee, setEmployee] = useState<any>({});
+  const { getEmployees, getEmployeeDetails } = useEmployees();
+  const [data, setData] = useState<Employee[]>([]);
+  const [employee, setEmployee] = useState<Employee>({} as Employee);
   const [view, setView] = useState({ page: 'employees', selectedEmployee: -1 });
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
-    await instance.get('employees', { method: 'GET' }).then((response) => {
-      setData(response.data);
-      setLoading(false);
-    });
+    const data = await getEmployees();
+    setData(data);
+    setLoading(false);
   };
 
   const employeefetchData = async () => {
-    await instance
-      .get(`employees/${view.selectedEmployee}`, { method: 'GET' })
-      .then((response) => {
-        setEmployee(response.data);
-        setLoading(false);
-      });
+    const data = await getEmployeeDetails(view.selectedEmployee.toString());
+    setEmployee(data);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -171,3 +249,4 @@ const Employees = (): React.ReactElement => {
 };
 
 export default Employees;
+ */
