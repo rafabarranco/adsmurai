@@ -8,8 +8,7 @@ const useEmployees = (): UseEmployeesResult => {
 
   const getEmployees = async (): Promise<Employee[]> => {
     try {
-      const data = await get<Employee[]>(endpoint);
-      return data;
+      return await get<Employee[]>(endpoint);
     } catch (error) {
       throw error as Error;
     }
@@ -17,8 +16,7 @@ const useEmployees = (): UseEmployeesResult => {
 
   const getEmployeeDetails = async (selectedEmployee: string) => {
     try {
-      const data = await get<Employee>(`${endpoint}/${selectedEmployee}`);
-      return data;
+      return await get<Employee>(`${endpoint}/${selectedEmployee}`);
     } catch (error) {
       throw error as Error;
     }
