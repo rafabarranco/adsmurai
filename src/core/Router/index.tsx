@@ -1,16 +1,9 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { FC, ReactElement } from 'react';
+import { RouterProvider } from 'react-router-dom';
 
-import Employees from '../../Employees';
-import Layout from '../../containers/Layout';
+import router from './config';
 
-const AppRouter = () => {
-  const router = createBrowserRouter([
-    {
-      path: '',
-      element: <Layout />,
-      children: [{ path: '/', element: <Employees /> }],
-    },
-  ]);
+const AppRouter: FC = (): ReactElement => {
   return <RouterProvider router={router} />;
 };
 
