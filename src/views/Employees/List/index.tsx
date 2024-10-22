@@ -30,7 +30,7 @@ const EmployeesList: FC = (): ReactElement => {
   const [employeeList, setEmployeeList] = useState<IEmployee[]>([]);
 
   const onHandleClick = (id: string) => {
-    navigate(`${id}`);
+    navigate(id);
   };
 
   const fetchData = async () => {
