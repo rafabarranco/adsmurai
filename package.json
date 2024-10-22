@@ -15,19 +15,15 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.ts?(x)": [
+    "*.{js?(x),ts?(x)}": [
       "eslint --fix .",
       "prettier --write ."
     ],
-    "*.js?(x)": [
-      "eslint --fix .",
-      "prettier --write ."
-    ],
-    "*.json": [
+    "*.{json,?(s)css}": [
       "prettier --write"
     ],
-    "*.?(s)css": [
-      "prettier --write"
+    "*.{spec,test}.{js?(x),ts?(x)}": [
+      "vitest --run"
     ]
   },
   "dependencies": {
