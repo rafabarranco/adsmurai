@@ -12,7 +12,7 @@ import Table from '@mui/joy/Table';
 
 import useEmployees from '../../../models/employees/useEmployees';
 
-import getDaysFromDate from '../../../utils/dates/getDaysFromDate';
+import getDaysFromDate from '../../../utils/functions/dates/getDaysFromDate';
 
 import { EMPLOYEES_LIST_HEADERS } from './constants';
 

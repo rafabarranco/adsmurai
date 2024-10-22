@@ -16,6 +16,8 @@ export interface IEmployeeDetails extends IEmployee {
   dismissalDate: string | null;
 }
 
+export type TCreateEmployeeForm = Omit<IEmployeeDetails, 'id'>;
+
 export interface IUseEmployeesResult {
   getEmployees: () => Promise<IEmployee[]>;
   getEmployeeDetails: (selectedEmployee: string) => Promise<IEmployeeDetails>;
