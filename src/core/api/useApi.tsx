@@ -1,42 +1,41 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { TRequest, UseApiResult } from './types';
+import axios from 'axios';
+import { useCallback } from 'react';
 
 const baseURL = 'http://localhost:3000/api/';
 
-const instance = axios.create({
-  baseURL,
-  timeout: 1000,
-});
-
-const useApi = (): UseApiResult => {
-  const request = async <T, Z = unknown>(
-    method: TRequest,
-    endpoint: string,
-    body?: Z,
-  ): Promise<T> => {
+const useApi = () => {
+  const get = useCallback(async <T,>(endpoint: string): Promise<T> => {
     try {
-      const response: AxiosResponse<T> = await instance[method](
-        endpoint,
-        body as AxiosRequestConfig,
-      );
-      return response.data;
+      const response = await axios.get(`${baseURL}${endpoint}`);
+      return response.data as T;
     } catch (error) {
-      const err = error as Error;
-      throw new Error(err.message || 'Unexpected error');
+      throw new Error((error as Error).message || 'Unexpected error');
     }
-  };
+  }, []);
 
-  const get = async <T,>(endpoint: string): Promise<T> => {
-    return request<T>('get', endpoint);
-  };
+  const post = useCallback(
+    async <T, Z>(endpoint: string, body: Z): Promise<T> => {
+      try {
+        const response = await axios.post(`${baseURL}${endpoint}`, body);
+        return response.data as T;
+      } catch (error) {
+        throw new Error((error as Error).message || 'Unexpected error');
+      }
+    },
+    [],
+  );
 
-  const post = async <T, Z>(endpoint: string, body: Z): Promise<T> => {
-    return request<T, Z>('post', endpoint, body);
-  };
-
-  const put = async <T, Z>(endpoint: string, body: Z): Promise<T> => {
-    return request<T, Z>('put', endpoint, body);
-  };
+  const put = useCallback(
+    async <T, Z>(endpoint: string, body: Z): Promise<T> => {
+      try {
+        const response = await axios.put(`${baseURL}${endpoint}`, body);
+        return response.data as T;
+      } catch (error) {
+        throw new Error((error as Error).message || 'Unexpected error');
+      }
+    },
+    [],
+  );
 
   return { get, post, put };
 };
