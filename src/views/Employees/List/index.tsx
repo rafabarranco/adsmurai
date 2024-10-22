@@ -14,9 +14,10 @@ import useEmployees from '../../../models/employees/useEmployees';
 
 import getDaysFromDate from '../../../utils/dates/getDaysFromDate';
 
-import { ROLES_COLORS } from '../constants';
+import { EMPLOYEES_LIST_HEADERS } from './constants';
 
 import { IEmployee } from '../../../models/employees/types';
+import { ERoles, ERolesColors } from '../types';
 
 import styles from './styles';
 
@@ -48,11 +49,11 @@ const EmployeesList: FC = (): ReactElement => {
     <Table aria-label="basic table">
       <thead>
         <tr>
-          <th style={{ width: '25%' }}>Name</th>
-          <th style={{ width: '15%' }}>Days since hired</th>
-          <th style={{ width: '30%' }}>Email</th>
-          <th style={{ width: '20%' }}>Salary</th>
-          <th style={{ width: '10%' }}>Role</th>
+          {EMPLOYEES_LIST_HEADERS.map(({ id, label, styles }) => (
+            <th key={id} style={styles}>
+              {label}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>
@@ -69,9 +70,7 @@ const EmployeesList: FC = (): ReactElement => {
               <td>{getDaysFromDate(hireDate)} days ago</td>
               <td>{email}</td>
               <td>{salary} €</td>
-              <td style={{ color: ROLES_COLORS[role] }}>
-                {role[0].toUpperCase() + role.substring(1).toLowerCase()}
-              </td>
+              <td style={{ color: ERolesColors[role] }}>{ERoles[role]}</td>
             </tr>
           ),
         )}
