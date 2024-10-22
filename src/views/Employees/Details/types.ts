@@ -1,5 +1,11 @@
 export type TDepartments = 'customer success' | 'engineering' | 'finance';
 
+export enum EDepartments {
+  'customer success' = 'Customer Success',
+  engineering = 'IT',
+  finance = 'Finance',
+}
+
 export type TStyles =
   | 'Card'
   | 'CardContent'

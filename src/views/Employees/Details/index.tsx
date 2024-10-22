@@ -14,10 +14,10 @@ import {
 import useEmployees from '../../../models/employees/useEmployees';
 
 import { DEPARTMENTS_ICONS } from './constants';
-import { ROLES_COLORS } from '../constants';
 
 import { IEmployeeDetails } from '../../../models/employees/types';
-import { TDepartments } from './types';
+import { EDepartments, TDepartments } from './types';
+import { ERoles, ERolesColors } from '../types';
 
 import styles from './styles';
 
@@ -28,22 +28,28 @@ const EmployeeDetails: FC = (): ReactElement => {
 
   const { getEmployeeDetails } = useEmployees();
 
-  const [employeeDetails, setEmployeeDetails] = useState<IEmployeeDetails>(
-    {} as IEmployeeDetails,
-  );
+  const [
+    {
+      firstName,
+      lastName,
+      email,
+      department,
+      role,
+      salary,
+      hireDate,
+      dismissalDate,
+      picture,
+    },
+    setEmployeeDetails,
+  ] = useState<IEmployeeDetails>({} as IEmployeeDetails);
 
   const onHandleClick = () => navigate(-1);
 
-  const parseDepartment = (department: string) => {
-    if (department === 'customer success') return 'Customer Success';
-    if (department === 'engineering') return 'IT';
-    return (
-      department[0].toLocaleUpperCase() +
-      department.substring(1).toLocaleLowerCase()
-    );
+  const parseDate = (date: string): string => {
+    return date.substring(0, 10);
   };
 
-  const fetchEmployeeDetails = async () => {
+  const fetchEmployeeDetails = async (): Promise<void> => {
     const data = await getEmployeeDetails(id || '');
     setEmployeeDetails(data);
   };
@@ -62,18 +68,14 @@ const EmployeeDetails: FC = (): ReactElement => {
       </Button>
       <Card orientation="horizontal" sx={styles.Card}>
         <AspectRatio flex ratio="1" sx={styles.Picture}>
-          <img
-            src={employeeDetails.picture}
-            loading="lazy"
-            alt={`${employeeDetails.firstName} ${employeeDetails.lastName}`}
-          />
+          <img src={picture} loading="lazy" alt={`${firstName} ${lastName}`} />
         </AspectRatio>
         <CardContent sx={styles.CardContent}>
           <Grid sx={styles.Info}>
             <Typography sx={styles.Name}>
-              {employeeDetails.firstName} {employeeDetails.lastName}
+              {firstName} {lastName}
             </Typography>
-            <Typography sx={styles.Id}>{employeeDetails.id}</Typography>
+            <Typography sx={styles.Id}>{id}</Typography>
           </Grid>
 
           <Typography
@@ -81,7 +83,7 @@ const EmployeeDetails: FC = (): ReactElement => {
             textColor="text.tertiary"
             sx={styles.Email}
           >
-            {employeeDetails.email}
+            {email}
           </Typography>
           <Sheet sx={styles.Sheet}>
             <Grid>
@@ -89,12 +91,8 @@ const EmployeeDetails: FC = (): ReactElement => {
                 Department
               </Typography>
               <Typography sx={styles.DepartmentValue}>
-                {employeeDetails.department &&
-                  DEPARTMENTS_ICONS[
-                    employeeDetails.department as TDepartments
-                  ]}{' '}
-                {employeeDetails.department &&
-                  parseDepartment(employeeDetails.department)}
+                {department && DEPARTMENTS_ICONS[department as TDepartments]}{' '}
+                {EDepartments[department as TDepartments]}
               </Typography>
             </Grid>
             <Grid>
@@ -104,37 +102,29 @@ const EmployeeDetails: FC = (): ReactElement => {
               <Typography
                 sx={{
                   ...styles.RoleValue,
-                  color: ROLES_COLORS[employeeDetails.role],
+                  color: ERolesColors[role],
                 }}
               >
-                {employeeDetails.role &&
-                  employeeDetails.role[0].toLocaleUpperCase() +
-                    employeeDetails.role.substring(1).toLocaleLowerCase()}
+                {ERoles[role]}
               </Typography>
             </Grid>
             <Grid>
               <Typography level="body-xs" sx={styles.SalaryLabel}>
                 Salary
               </Typography>
-              <Typography sx={styles.SalaryValue}>
-                {`${employeeDetails.salary} €`}
-              </Typography>
+              <Typography sx={styles.SalaryValue}>{`${salary} €`}</Typography>
             </Grid>
           </Sheet>
           <Grid sx={styles.HireInfo}>
             <Button variant="outlined" color="neutral" sx={styles.HireDate}>
-              {employeeDetails.hireDate
-                ? employeeDetails.hireDate.substring(0, 10)
-                : 'Unknown'}
+              {hireDate ? parseDate(hireDate) : 'Unknown'}
             </Button>
             <Button
               variant="solid"
-              color={employeeDetails.dismissalDate ? 'danger' : 'success'}
+              color={dismissalDate ? 'danger' : 'success'}
               sx={styles.DismissalDate}
             >
-              {employeeDetails.dismissalDate
-                ? employeeDetails.dismissalDate.substring(0, 10)
-                : 'Currently hired'}
+              {dismissalDate ? parseDate(dismissalDate) : 'Currently hired'}
             </Button>
           </Grid>
         </CardContent>
