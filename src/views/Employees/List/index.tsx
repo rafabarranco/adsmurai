@@ -14,9 +14,9 @@ import useEmployees from '../../../models/employees/useEmployees';
 
 import getDaysFromDate from '../../../utils/dates/getDaysFromDate';
 
-import { ROLES } from '../constants';
+import { ROLES_COLORS } from '../constants';
 
-import { Employee } from '../../../models/employees/types';
+import { IEmployee } from '../../../models/employees/types';
 
 import styles from './styles';
 
@@ -26,7 +26,7 @@ const EmployeesList: FC = (): ReactElement => {
 
   const { getEmployees } = useEmployees();
 
-  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
+  const [employeeList, setEmployeeList] = useState<IEmployee[]>([]);
 
   const onHandleClick = (id: string) => {
     navigate(`${id}`);
@@ -69,7 +69,7 @@ const EmployeesList: FC = (): ReactElement => {
               <td>{getDaysFromDate(hireDate)} days ago</td>
               <td>{email}</td>
               <td>{salary} €</td>
-              <td style={{ color: ROLES[role] }}>
+              <td style={{ color: ROLES_COLORS[role] }}>
                 {role[0].toUpperCase() + role.substring(1).toLowerCase()}
               </td>
             </tr>

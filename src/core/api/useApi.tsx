@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { useCallback } from 'react';
 
+import { IUseApiResult } from './types';
+
 const baseURL = 'http://localhost:3000/api/';
 
-const useApi = () => {
+const useApi = (): IUseApiResult => {
   const get = useCallback(async <T,>(endpoint: string): Promise<T> => {
     try {
       const response = await axios.get(`${baseURL}${endpoint}`);

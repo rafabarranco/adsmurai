@@ -1,14 +1,14 @@
 import useApi from '../../core/api/useApi';
 
-import { Employee, UseEmployeesResult } from './types';
+import { IEmployee, IEmployeeDetails, IUseEmployeesResult } from './types';
 
-const useEmployees = (): UseEmployeesResult => {
+const useEmployees = (): IUseEmployeesResult => {
   const { get } = useApi();
   const endpoint = 'employees';
 
-  const getEmployees = async (): Promise<Employee[]> => {
+  const getEmployees = async (): Promise<IEmployee[]> => {
     try {
-      return await get<Employee[]>(endpoint);
+      return await get<IEmployee[]>(endpoint);
     } catch (error) {
       throw error as Error;
     }
@@ -16,7 +16,7 @@ const useEmployees = (): UseEmployeesResult => {
 
   const getEmployeeDetails = async (selectedEmployee: string) => {
     try {
-      return await get<Employee>(`${endpoint}/${selectedEmployee}`);
+      return await get<IEmployeeDetails>(`${endpoint}/${selectedEmployee}`);
     } catch (error) {
       throw error as Error;
     }

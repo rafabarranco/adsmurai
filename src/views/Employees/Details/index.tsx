@@ -13,20 +13,23 @@ import {
 
 import useEmployees from '../../../models/employees/useEmployees';
 
-import { DEPARTMENTS } from './constants';
-import { ROLES } from '../constants';
+import { DEPARTMENTS_ICONS } from './constants';
+import { ROLES_COLORS } from '../constants';
 
-import { Employee } from '../../../models/employees/types';
-import { Departments } from './types';
+import { IEmployeeDetails } from '../../../models/employees/types';
+import { TDepartments } from './types';
+
 import styles from './styles';
 
 const EmployeeDetails: FC = (): ReactElement => {
+  const firstLaunch = useRef<boolean>(true);
   const navigate = useNavigate();
   const { id } = useParams();
+
   const { getEmployeeDetails } = useEmployees();
-  const firstLaunch = useRef<boolean>(true);
-  const [employeeDetails, setEmployeeDetails] = useState<Employee>(
-    {} as Employee,
+
+  const [employeeDetails, setEmployeeDetails] = useState<IEmployeeDetails>(
+    {} as IEmployeeDetails,
   );
 
   const onHandleClick = () => navigate(-1);
@@ -87,7 +90,9 @@ const EmployeeDetails: FC = (): ReactElement => {
               </Typography>
               <Typography sx={styles.DepartmentValue}>
                 {employeeDetails.department &&
-                  DEPARTMENTS[employeeDetails.department as Departments]}{' '}
+                  DEPARTMENTS_ICONS[
+                    employeeDetails.department as TDepartments
+                  ]}{' '}
                 {employeeDetails.department &&
                   parseDepartment(employeeDetails.department)}
               </Typography>
@@ -97,7 +102,10 @@ const EmployeeDetails: FC = (): ReactElement => {
                 Role
               </Typography>
               <Typography
-                sx={{ ...styles.RoleValue, color: ROLES[employeeDetails.role] }}
+                sx={{
+                  ...styles.RoleValue,
+                  color: ROLES_COLORS[employeeDetails.role],
+                }}
               >
                 {employeeDetails.role &&
                   employeeDetails.role[0].toLocaleUpperCase() +

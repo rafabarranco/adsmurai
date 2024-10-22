@@ -1,4 +1,3 @@
-// getDaysFromDate.ts
 const getDaysFromDate = (date: string): number => {
   const to = new Date(date);
 

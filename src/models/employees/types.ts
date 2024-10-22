@@ -1,21 +1,22 @@
-export type EmployeeRole = 'user' | 'admin' | 'superadmin';
+export type TEmployeeRole = 'user' | 'admin' | 'superadmin';
 
-export interface Employee {
+export interface IEmployee {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
-  department?: string;
-  role: EmployeeRole;
+  role: TEmployeeRole;
   salary: number;
-  picture?: string;
   hireDate: string;
-  dismissalDate?: string | null;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
-export interface UseEmployeesResult {
-  getEmployees: () => Promise<Employee[]>;
-  getEmployeeDetails: (selectedEmployee: string) => Promise<Employee>;
+export interface IEmployeeDetails extends IEmployee {
+  department: string;
+  picture: string;
+  dismissalDate: string | null;
+}
+
+export interface IUseEmployeesResult {
+  getEmployees: () => Promise<IEmployee[]>;
+  getEmployeeDetails: (selectedEmployee: string) => Promise<IEmployeeDetails>;
 }

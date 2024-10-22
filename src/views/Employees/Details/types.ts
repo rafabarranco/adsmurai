@@ -1,4 +1,5 @@
-export type Departments = 'customer success' | 'engineering' | 'finance';
+export type TDepartments = 'customer success' | 'engineering' | 'finance';
+
 export type TStyles =
   | 'Card'
   | 'CardContent'
