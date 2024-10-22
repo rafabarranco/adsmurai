@@ -1,4 +1,4 @@
-import {Employee} from './employee';
+import { Employee } from './employee';
 
 const defaultEmployees = [
   {
@@ -780,15 +780,15 @@ const defaultEmployees = [
     salary: 200000,
     picture: '/backend/src/assets/profile1.jpg',
     role: 'admin',
-  }
+  },
 ];
 
 const initializeEmployees = async () => {
-    try {
-      await Employee.bulkCreate(defaultEmployees, { ignoreDuplicates: true });
-    } catch (error) {
-      console.error('Error initializing employees:', error);
-    }
-  };
-  
-  export default initializeEmployees;
+  try {
+    await Employee.bulkCreate(defaultEmployees, { ignoreDuplicates: true });
+  } catch (error) {
+    console.error('Error initializing employees:', error);
+  }
+};
+
+export default initializeEmployees;

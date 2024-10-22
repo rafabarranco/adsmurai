@@ -4,11 +4,11 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-"compilerOptions": {
+  "compilerOptions": {
     "target": "es5",
     "lib": ["es5", "dom", "dom.iterable", "esnext"],
     "types": ["node", "jest", "@testing-library/jest-dom"],
     "skipLibCheck": true,
-    "module": "esnext",
-  },
+    "module": "esnext"
+  }
 }

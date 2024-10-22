@@ -99,9 +99,18 @@ const router = Router();
 router.get('/employees', async (req: Request, res: Response) => {
   try {
     const employees = await Employee.findAll({
-      attributes: ['id', 'firstName', 'lastName', 'hireDate', 'email', 'salary', 'role']
+      attributes: [
+        'id',
+        'firstName',
+        'lastName',
+        'hireDate',
+        'email',
+        'salary',
+        'role',
+      ],
     });
     res.json(employees);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     res.status(500).json({ error: 'Error fetching employees' });
   }
@@ -138,6 +147,7 @@ router.get('/employees/:id', async (req: Request, res: Response) => {
     } else {
       res.status(404).json({ error: 'Employee not found' });
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     res.status(500).json({ error: 'Error fetching employee' });
   }
@@ -167,6 +177,7 @@ router.post('/employees', async (req: Request, res: Response) => {
   try {
     const employee = await Employee.create(req.body);
     res.status(201).json(employee);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     res.status(400).json({ error: 'Error creating employee' });
   }
@@ -204,7 +215,7 @@ router.post('/employees', async (req: Request, res: Response) => {
 router.put('/employees/:id', async (req: Request, res: Response) => {
   try {
     const [updated] = await Employee.update(req.body, {
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
     if (updated) {
       const updatedEmployee = await Employee.findByPk(req.params.id);
@@ -212,6 +223,7 @@ router.put('/employees/:id', async (req: Request, res: Response) => {
     } else {
       res.status(404).json({ error: 'Employee not found' });
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     res.status(400).json({ error: 'Error updating employee' });
   }
