@@ -2,6 +2,7 @@ import { FC, ReactElement } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs, { Dayjs } from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
 
 import Grid from '@mui/joy/Grid';
 import Button from '@mui/joy/Button';
@@ -11,15 +12,22 @@ import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import Card from '@mui/joy/Card';
 import Input from '@mui/joy/Input';
+import FormLabel from '@mui/joy/FormLabel';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
+import useEmployees from '../../../models/employees/useEmployees';
+
 import schema from './validations';
 
 import { TEmployeeCreation } from './types';
+import { IEmployeeDetails } from '../../../models/employees/types';
+import { useNavigate } from 'react-router-dom';
 
 const EmployeeCreation: FC = (): ReactElement => {
+  const navigate = useNavigate();
+  const { addEmployee } = useEmployees();
   const {
     control,
     handleSubmit,
@@ -29,14 +37,14 @@ const EmployeeCreation: FC = (): ReactElement => {
   } = useForm<TEmployeeCreation>({
     resolver: zodResolver(schema),
     defaultValues: {
-      picture: null,
+      picture: '',
       firstName: '',
       lastName: '',
       email: '',
       department: '',
       role: '',
-      salary: '',
-      hireDate: null,
+      salary: 0,
+      hireDate: '',
       dismissalDate: null,
     },
   });
@@ -45,8 +53,16 @@ const EmployeeCreation: FC = (): ReactElement => {
     setValue('picture', fileURL);
   };
 
-  const onSubmit: SubmitHandler<TEmployeeCreation> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<TEmployeeCreation> = async (data) => {
+    try {
+      await addEmployee({
+        ...data,
+        id: uuidv4(),
+      } as IEmployeeDetails);
+      navigate('/');
+    } catch (error) {
+      console.error(error as Error);
+    }
   };
 
   return (
@@ -58,6 +74,7 @@ const EmployeeCreation: FC = (): ReactElement => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid xs={12} sm={6}>
+              <FormLabel>Avatar *</FormLabel>
               <input
                 type="file"
                 accept="image/*"
@@ -68,7 +85,7 @@ const EmployeeCreation: FC = (): ReactElement => {
               <FormControl error={!!errors.email}>
                 <Input
                   type="email"
-                  placeholder="Email"
+                  placeholder="Email *"
                   {...register('email')}
                   error={!!errors.email}
                 />
@@ -80,7 +97,7 @@ const EmployeeCreation: FC = (): ReactElement => {
             <Grid xs={12} sm={6}>
               <FormControl error={!!errors.firstName}>
                 <Input
-                  placeholder="First Name"
+                  placeholder="First Name *"
                   {...register('firstName')}
                   error={!!errors.firstName}
                 />
@@ -94,7 +111,7 @@ const EmployeeCreation: FC = (): ReactElement => {
             <Grid xs={12} sm={6}>
               <FormControl error={!!errors.lastName}>
                 <Input
-                  placeholder="Last Name"
+                  placeholder="Last Name *"
                   {...register('lastName')}
                   error={!!errors.lastName}
                 />
@@ -107,14 +124,15 @@ const EmployeeCreation: FC = (): ReactElement => {
             </Grid>
           </Grid>
           <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid xs={12} sm={4}>
+            <Grid xs={12} sm={5}>
               <FormControl error={!!errors.department}>
                 <Controller
                   name="department"
                   control={control}
+                  defaultValue=""
                   render={({ field: { onChange, onBlur, value, ref } }) => (
                     <Select
-                      placeholder="Select department"
+                      placeholder="Select department *"
                       onChange={(_, newValue) => onChange(newValue)} // Cambia para recibir newValue
                       onBlur={onBlur}
                       value={value}
@@ -133,14 +151,14 @@ const EmployeeCreation: FC = (): ReactElement => {
                 )}
               </FormControl>
             </Grid>
-            <Grid xs={12} sm={4}>
+            <Grid xs={12} sm={5}>
               <FormControl error={!!errors.role}>
                 <Controller
                   name="role"
                   control={control}
                   render={({ field: { onChange, onBlur, value, ref } }) => (
                     <Select
-                      placeholder="Select role"
+                      placeholder="Select role *"
                       onChange={(_, newValue) => onChange(newValue)} // Cambia para recibir newValue
                       onBlur={onBlur}
                       value={value}
@@ -157,12 +175,14 @@ const EmployeeCreation: FC = (): ReactElement => {
                 )}
               </FormControl>
             </Grid>
-            <Grid xs={12} sm={4}>
+            <Grid xs={12} sm={2}>
               <FormControl error={!!errors.salary}>
                 <Input
                   type="number"
-                  placeholder="Salary"
-                  {...register('salary')}
+                  placeholder="Salary *"
+                  {...register('salary', {
+                    setValueAs: (value) => (value === '' ? 0 : Number(value)),
+                  })}
                   error={!!errors.salary}
                 />
                 {errors.salary && (
@@ -175,7 +195,8 @@ const EmployeeCreation: FC = (): ReactElement => {
           </Grid>
           <Grid container spacing={2} sx={{ mt: 2 }}>
             <Grid xs={12} sm={6}>
-              <FormControl>
+              <FormControl error={!!errors.hireDate}>
+                <FormLabel>Hire date *</FormLabel>
                 <Controller
                   name="hireDate"
                   control={control}
@@ -189,10 +210,16 @@ const EmployeeCreation: FC = (): ReactElement => {
                     />
                   )}
                 />
+                {errors.hireDate && (
+                  <Typography color="danger">
+                    {errors.hireDate.message}
+                  </Typography>
+                )}
               </FormControl>
             </Grid>
             <Grid xs={12} sm={6}>
               <FormControl>
+                <FormLabel>Dismissal date</FormLabel>
                 <Controller
                   name="dismissalDate"
                   control={control}
