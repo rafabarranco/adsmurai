@@ -1,17 +1,13 @@
-import { useContext, useEffect } from 'react';
-import { UNSAFE_NavigationContext } from 'react-router-dom';
-import { Transition } from 'history';
-import { NavigationContextObject } from './types';
+import { useEffect } from 'react';
+import { createBrowserHistory, Transition } from 'history';
 
-export const usePrompt = (message: string, when: boolean): void => {
-  const { navigator } = useContext(
-    UNSAFE_NavigationContext,
-  ) as unknown as NavigationContextObject;
+const history = createBrowserHistory();
 
+export const usePrompt = (message: string, when: boolean) => {
   useEffect(() => {
     if (!when) return;
 
-    const unblock = navigator.block((tx: Transition) => {
+    const unblock = history.block((tx: Transition) => {
       const confirmNavigation = window.confirm(message);
       if (confirmNavigation) {
         unblock();
@@ -20,5 +16,5 @@ export const usePrompt = (message: string, when: boolean): void => {
     });
 
     return unblock;
-  }, [navigator, when, message]);
+  }, [when, message]);
 };
