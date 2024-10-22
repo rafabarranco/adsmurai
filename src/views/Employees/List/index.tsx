@@ -66,10 +66,12 @@ const EmployeesList: FC = (): ReactElement => {
               <td>
                 {firstName} {lastName}
               </td>
-              <td>{getDaysFromDate(hireDate)}</td>
+              <td>{getDaysFromDate(hireDate)} days ago</td>
               <td>{email}</td>
-              <td>{salary}</td>
-              <td style={{ color: ROLES[role] }}>{role.toLocaleUpperCase()}</td>
+              <td>{salary} €</td>
+              <td style={{ color: ROLES[role] }}>
+                {role[0].toUpperCase() + role.substring(1).toLowerCase()}
+              </td>
             </tr>
           ),
         )}
