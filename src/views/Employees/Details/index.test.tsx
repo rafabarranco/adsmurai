@@ -50,10 +50,10 @@ describe('EmployeeDetails component', () => {
 
     expect(screen.getByText('John Doe')).toBeTruthy();
     expect(screen.getByText('john.doe@example.com')).toBeTruthy();
-    expect(screen.getByText('70000€')).toBeTruthy();
+    expect(screen.getByText('70000 €')).toBeTruthy();
     expect(screen.getByText('Department')).toBeTruthy();
-    expect(screen.getByText('ENGINEERING')).toBeTruthy();
-    expect(screen.getByText('ADMIN')).toBeTruthy();
+    expect(screen.getByText('IT')).toBeTruthy();
+    expect(screen.getByText('Admin')).toBeTruthy();
     expect(screen.getByText('2023-01-01')).toBeTruthy();
     expect(screen.getByText('Currently hired')).toBeTruthy();
 

@@ -65,11 +65,11 @@ describe('EmployeesList component', () => {
     expect(screen.getByText('john.doe@example.com')).toBeTruthy();
     expect(screen.getByText('jane.smith@example.com')).toBeTruthy();
 
-    expect(screen.getByText('50000')).toBeTruthy();
-    expect(screen.getByText('60000')).toBeTruthy();
+    expect(screen.getByText('50000 €')).toBeTruthy();
+    expect(screen.getByText('60000 €')).toBeTruthy();
 
-    expect(screen.getByText('ADMIN')).toBeTruthy();
-    expect(screen.getByText('USER')).toBeTruthy();
+    expect(screen.getByText('Admin')).toBeTruthy();
+    expect(screen.getByText('User')).toBeTruthy();
   });
 
   it('should navigate when clicking on a row', async () => {
