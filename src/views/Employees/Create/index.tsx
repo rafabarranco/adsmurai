@@ -1,70 +1,222 @@
 import { FC, ReactElement } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import dayjs, { Dayjs } from 'dayjs';
 
-import { usePrompt } from '../../../utils/hooks/usePrompt/usePrompt';
-import { TCreateEmployeeForm } from '../../../models/employees/types';
+import Grid from '@mui/joy/Grid';
+import Button from '@mui/joy/Button';
+import FormControl from '@mui/joy/FormControl';
+import Typography from '@mui/joy/Typography';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
+import Card from '@mui/joy/Card';
+import Input from '@mui/joy/Input';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
+import schema from './validations';
+
+import { TEmployeeCreation } from './types';
 
 const EmployeeCreation: FC = (): ReactElement => {
   const {
-    register,
+    control,
     handleSubmit,
-    formState: { isDirty },
-    reset,
-  } = useForm<TCreateEmployeeForm>();
+    register,
+    setValue,
+    formState: { errors },
+  } = useForm<TEmployeeCreation>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      picture: null,
+      firstName: '',
+      lastName: '',
+      email: '',
+      department: '',
+      role: '',
+      salary: '',
+      hireDate: null,
+      dismissalDate: null,
+    },
+  });
 
-  const onSubmit: SubmitHandler<TCreateEmployeeForm> = (data) => {
-    console.log('Datos enviados:', data);
-    reset();
+  const handleFileChange = (fileURL: string) => {
+    setValue('picture', fileURL);
   };
 
-  usePrompt(
-    'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?',
-    isDirty,
-  );
+  const onSubmit: SubmitHandler<TEmployeeCreation> = (data) => {
+    console.log(data);
+  };
 
   return (
-    <div>
-      <h2>Create new employee</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>Picture:</label>
-          <input {...register('picture', { required: true })} />
-        </div>
-        <div>
-          <label>Name:</label>
-          <input {...register('firstName', { required: true })} />
-        </div>
-        <div>
-          <label>Surname:</label>
-          <input {...register('lastName', { required: true })} />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input type="email" {...register('email', { required: true })} />
-        </div>
-        <div>
-          <label>Department:</label>
-          <input {...register('department', { required: true })} />
-        </div>
-        <div>
-          <label>Role:</label>
-          <input {...register('role', { required: true })} />
-        </div>
-        <div>
-          <label>Salary:</label>
-          <input {...register('salary', { required: true })} />
-        </div>
-        <div>
-          <label>Hire date:</label>
-          <input {...register('hireDate', { required: true })} />
-        </div>
-        <div>
-          <label>Dismissal date:</label>
-          <input {...register('dismissalDate', { required: true })} />
-        </div>
-        <button type="submit">Add employee</button>
-      </form>
-    </div>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Card variant="outlined" sx={{ maxWidth: 600, mx: 'auto', p: 3 }}>
+        <Typography level="h4" textAlign="center" sx={{ mb: 2 }}>
+          Employee Form
+        </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+            <Grid xs={12} sm={6}>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(event) => handleFileChange(event.target.value)}
+              />
+            </Grid>
+            <Grid xs={12} sm={6}>
+              <FormControl error={!!errors.email}>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  {...register('email')}
+                  error={!!errors.email}
+                />
+                {errors.email && (
+                  <Typography color="danger">{errors.email.message}</Typography>
+                )}
+              </FormControl>
+            </Grid>
+            <Grid xs={12} sm={6}>
+              <FormControl error={!!errors.firstName}>
+                <Input
+                  placeholder="First Name"
+                  {...register('firstName')}
+                  error={!!errors.firstName}
+                />
+                {errors.firstName && (
+                  <Typography color="danger">
+                    {errors.firstName.message}
+                  </Typography>
+                )}
+              </FormControl>
+            </Grid>
+            <Grid xs={12} sm={6}>
+              <FormControl error={!!errors.lastName}>
+                <Input
+                  placeholder="Last Name"
+                  {...register('lastName')}
+                  error={!!errors.lastName}
+                />
+                {errors.lastName && (
+                  <Typography color="danger">
+                    {errors.lastName.message}
+                  </Typography>
+                )}
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid xs={12} sm={4}>
+              <FormControl error={!!errors.department}>
+                <Controller
+                  name="department"
+                  control={control}
+                  render={({ field: { onChange, onBlur, value, ref } }) => (
+                    <Select
+                      placeholder="Select department"
+                      onChange={(_, newValue) => onChange(newValue)} // Cambia para recibir newValue
+                      onBlur={onBlur}
+                      value={value}
+                      ref={ref}
+                    >
+                      <Option value="customer success">Customer Success</Option>
+                      <Option value="engineering">Engineering</Option>
+                      <Option value="finance">Finance</Option>
+                    </Select>
+                  )}
+                />
+                {errors.department && (
+                  <Typography color="danger">
+                    {errors.department.message}
+                  </Typography>
+                )}
+              </FormControl>
+            </Grid>
+            <Grid xs={12} sm={4}>
+              <FormControl error={!!errors.role}>
+                <Controller
+                  name="role"
+                  control={control}
+                  render={({ field: { onChange, onBlur, value, ref } }) => (
+                    <Select
+                      placeholder="Select role"
+                      onChange={(_, newValue) => onChange(newValue)} // Cambia para recibir newValue
+                      onBlur={onBlur}
+                      value={value}
+                      ref={ref}
+                    >
+                      <Option value="user">User</Option>
+                      <Option value="admin">Admin</Option>
+                      <Option value="superadmin">Superadmin</Option>
+                    </Select>
+                  )}
+                />
+                {errors.role && (
+                  <Typography color="danger">{errors.role.message}</Typography>
+                )}
+              </FormControl>
+            </Grid>
+            <Grid xs={12} sm={4}>
+              <FormControl error={!!errors.salary}>
+                <Input
+                  type="number"
+                  placeholder="Salary"
+                  {...register('salary')}
+                  error={!!errors.salary}
+                />
+                {errors.salary && (
+                  <Typography color="danger">
+                    {errors.salary.message}
+                  </Typography>
+                )}
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid xs={12} sm={6}>
+              <FormControl>
+                <Controller
+                  name="hireDate"
+                  control={control}
+                  render={({ field }) => (
+                    <DatePicker
+                      {...field}
+                      value={field.value ? dayjs(field.value) : null}
+                      onChange={(date: Dayjs | null) =>
+                        field.onChange(date ? date.toISOString() : null)
+                      }
+                    />
+                  )}
+                />
+              </FormControl>
+            </Grid>
+            <Grid xs={12} sm={6}>
+              <FormControl>
+                <Controller
+                  name="dismissalDate"
+                  control={control}
+                  render={({ field }) => (
+                    <DatePicker
+                      {...field}
+                      value={field.value ? dayjs(field.value) : null}
+                      onChange={(date: Dayjs | null) =>
+                        field.onChange(date ? date.toISOString() : null)
+                      }
+                    />
+                  )}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid textAlign="center" sx={{ mt: 3 }}>
+            <Button type="submit" variant="solid" sx={{ px: 4 }}>
+              Submit
+            </Button>
+          </Grid>
+        </form>
+      </Card>
+    </LocalizationProvider>
   );
 };
 
