@@ -195,7 +195,7 @@ const EmployeeForm: FC = (): ReactElement => {
                     render={({ field: { onChange, onBlur, value, ref } }) => (
                       <Select
                         placeholder="Select department *"
-                        onChange={(_, newValue) => onChange(newValue)} // Cambia para recibir newValue
+                        onChange={(_, newValue) => onChange(newValue)}
                         onBlur={onBlur}
                         value={value}
                         ref={ref}
@@ -223,7 +223,7 @@ const EmployeeForm: FC = (): ReactElement => {
                     render={({ field: { onChange, onBlur, value, ref } }) => (
                       <Select
                         placeholder="Select role *"
-                        onChange={(_, newValue) => onChange(newValue as string)} // Cambia para recibir newValue
+                        onChange={(_, newValue) => onChange(newValue as string)}
                         onBlur={onBlur}
                         value={value}
                         ref={ref}

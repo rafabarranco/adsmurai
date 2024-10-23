@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import EmployeeForm from '.';
-import useEmployees from '../../../models/employees/useEmployees'; // Asegúrate de importar esto
+import useEmployees from '../../../models/employees/useEmployees';
 
-vi.mock('../../../models/employees/useEmployees'); // Mock directo
+vi.mock('../../../models/employees/useEmployees');
 
 vi.mock('@mui/x-date-pickers/LocalizationProvider', () => ({
   LocalizationProvider: ({ children }) => <div>{children}</div>,
@@ -43,11 +43,8 @@ describe('EmployeeForm', () => {
       </MemoryRouter>,
     );
 
-    // Obtén todos los date pickers y verifica su número
     const datePickers = screen.getAllByTestId('hire-date-picker');
-    expect(datePickers.length).toBe(2); // Cambiado a 2 si intencionalmente hay más de 1
-
-    // Verifica que los campos de texto importantes estén presentes
+    expect(datePickers.length).toBe(2);
     expect(screen.getByPlaceholderText('Email *')).toBeTruthy();
     expect(screen.getByPlaceholderText('First Name *')).toBeTruthy();
   });
