@@ -1,8 +1,7 @@
 import { RouteObject } from 'react-router-dom';
 
 import Employees from '.';
-import EmployeeDetails from './Details';
-import EmployeeCreation from './Create';
+import EmployeeForm from './Form';
 
 const employeesRouter: RouteObject[] = [
   {
@@ -11,11 +10,11 @@ const employeesRouter: RouteObject[] = [
   },
   {
     path: '/:id',
-    element: <EmployeeDetails />,
+    element: <EmployeeForm />,
   },
   {
     path: '/create',
-    element: <EmployeeCreation />,
+    element: <EmployeeForm />,
   },
 ];
 
