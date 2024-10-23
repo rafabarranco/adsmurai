@@ -17,7 +17,7 @@ import getDaysFromDate from '../../../utils/functions/dates/getDaysFromDate';
 import { EMPLOYEES_LIST_HEADERS } from './constants';
 
 import { IEmployee } from '../../../models/employees/types';
-import { ERoles, ERolesColors } from '../types';
+import { ERoles, ERolesColors } from './types';
 
 import styles from './styles';
 
