@@ -12,11 +12,15 @@ vi.mock('../../core/api/useApi', () => {
 
 describe('useEmployees', () => {
   const mockGet = vi.fn();
+  const mockPost = vi.fn();
+  const mockPut = vi.fn();
   const endpoint = 'employees';
 
   beforeEach(() => {
     (useApi as Mock).mockImplementation(() => ({
       get: mockGet,
+      post: mockPost,
+      put: mockPut,
     }));
   });
 
@@ -34,6 +38,8 @@ describe('useEmployees', () => {
         hireDate: '2023-01-01',
         salary: 50000,
         role: 'admin',
+        department: 'engineering',
+        picture: 'path/to/picture',
       },
       {
         id: '2',
@@ -43,6 +49,8 @@ describe('useEmployees', () => {
         hireDate: '2022-06-15',
         salary: 60000,
         role: 'user',
+        department: 'finance',
+        picture: 'path/to/picture',
       },
     ];
 
@@ -75,6 +83,8 @@ describe('useEmployees', () => {
       hireDate: '2023-01-01',
       salary: 50000,
       role: 'admin',
+      department: 'customer success',
+      picture: 'path/to/picture',
     };
 
     const employeeId = '1';
@@ -99,5 +109,97 @@ describe('useEmployees', () => {
     await expect(result.current.getEmployeeDetails(employeeId)).rejects.toThrow(
       'Network Error',
     );
+  });
+
+  it('should add an employee successfully', async () => {
+    const newEmployee = {
+      id: '3',
+      firstName: 'Alice',
+      lastName: 'Johnson',
+      email: 'alice.johnson@example.com',
+      hireDate: '2023-10-01',
+      salary: 55000,
+      role: 'user',
+      department: 'engineering',
+      picture: 'path/to/picture',
+    };
+
+    mockPost.mockResolvedValueOnce(newEmployee);
+
+    const { result } = renderHook(() => useEmployees());
+
+    const employee = await result.current.addEmployee(newEmployee);
+
+    expect(mockPost).toHaveBeenCalledWith(endpoint, newEmployee);
+    expect(employee).toEqual(newEmployee);
+  });
+
+  it('should throw an error if adding an employee fails', async () => {
+    const newEmployee = {
+      firstName: 'Alice',
+      lastName: 'Johnson',
+      email: 'alice.johnson@example.com',
+      hireDate: '2023-10-01',
+      salary: 55000,
+      role: 'user',
+    };
+
+    mockPost.mockRejectedValueOnce(new Error('Network Error'));
+
+    const { result } = renderHook(() => useEmployees());
+
+    await expect(result.current.addEmployee(newEmployee)).rejects.toThrow(
+      'Network Error',
+    );
+  });
+
+  it('should edit an employee successfully', async () => {
+    const updatedEmployee = {
+      id: '1',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      hireDate: '2023-01-01',
+      salary: 52000,
+      role: 'admin',
+    };
+
+    const employeeId = '1';
+
+    mockPut.mockResolvedValueOnce(updatedEmployee);
+
+    const { result } = renderHook(() => useEmployees());
+
+    const employee = await result.current.editEmployee(
+      employeeId,
+      updatedEmployee,
+    );
+
+    expect(mockPut).toHaveBeenCalledWith(
+      `${endpoint}/${employeeId}`,
+      updatedEmployee,
+    );
+    expect(employee).toEqual(updatedEmployee);
+  });
+
+  it('should throw an error if editing an employee fails', async () => {
+    const updatedEmployee = {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      hireDate: '2023-01-01',
+      salary: 52000,
+      role: 'admin',
+    };
+
+    const employeeId = '1';
+
+    mockPut.mockRejectedValueOnce(new Error('Network Error'));
+
+    const { result } = renderHook(() => useEmployees());
+
+    await expect(
+      result.current.editEmployee(employeeId, updatedEmployee),
+    ).rejects.toThrow('Network Error');
   });
 });

@@ -19,4 +19,9 @@ export interface IEmployeeDetails extends IEmployee {
 export interface IUseEmployeesResult {
   getEmployees: () => Promise<IEmployee[]>;
   getEmployeeDetails: (selectedEmployee: string) => Promise<IEmployeeDetails>;
+  addEmployee: (body: IEmployeeDetails) => Promise<IEmployeeDetails>;
+  editEmployee: (
+    selectedEmployee: string,
+    body: IEmployeeDetails,
+  ) => Promise<IEmployeeDetails>;
 }

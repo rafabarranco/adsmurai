@@ -10,11 +10,11 @@ vi.mock('./', () => {
   };
 });
 
-vi.mock('./Details', () => {
+vi.mock('./Form', () => {
   return {
     __esModule: true,
     default: () => (
-      <div data-testid="employee-details">Employee Details Component</div>
+      <div data-testid="employee-form">Employee Form Component</div>
     ),
   };
 });
@@ -36,7 +36,7 @@ describe('employeesRouter', () => {
     expect(employeesElement.textContent).toContain('Employees Component');
   });
 
-  it('should render EmployeeDetails component for a specific ID path', () => {
+  it('should render EmployeeForm component for a specific ID path', () => {
     const employeeId = '123';
     render(
       <MemoryRouter initialEntries={[`/${employeeId}`]}>
@@ -48,10 +48,28 @@ describe('employeesRouter', () => {
       </MemoryRouter>,
     );
 
-    const employeeDetailsElement = screen.getByTestId('employee-details');
-    expect(employeeDetailsElement).toBeTruthy();
-    expect(employeeDetailsElement.textContent).toContain(
-      'Employee Details Component',
+    const employeeFormElement = screen.getByTestId('employee-form');
+    expect(employeeFormElement).toBeTruthy();
+    expect(employeeFormElement.textContent).toContain(
+      'Employee Form Component',
+    );
+  });
+
+  it('should render EmployeeForm component for create path', () => {
+    render(
+      <MemoryRouter initialEntries={['/create']}>
+        <Routes>
+          {employeesRouter.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    const employeeFormElement = screen.getByTestId('employee-form');
+    expect(employeeFormElement).toBeTruthy();
+    expect(employeeFormElement.textContent).toContain(
+      'Employee Form Component',
     );
   });
 });
