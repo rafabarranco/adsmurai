@@ -1,5 +1,13 @@
-import { FC, ReactElement, useEffect, useRef } from 'react';
+import {
+  ChangeEvent,
+  FC,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs, { Dayjs } from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,18 +21,21 @@ import Option from '@mui/joy/Option';
 import Card from '@mui/joy/Card';
 import Input from '@mui/joy/Input';
 import FormLabel from '@mui/joy/FormLabel';
+import Avatar from '@mui/joy/Avatar';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import useEmployees from '../../../models/employees/useEmployees';
 
+import GoBack from '../../../components/GoBack';
+
+import { DEFAULT_VALUES } from './constants';
+
 import schema from './validations';
 
 import { TEmployeeCreation } from './types';
 import { IEmployeeDetails } from '../../../models/employees/types';
-import { useParams } from 'react-router-dom';
-import GoBack from '../../../components/GoBack';
 
 const EmployeeForm: FC = (): ReactElement => {
   const firstLaunch = useRef<boolean>(true);
@@ -36,28 +47,30 @@ const EmployeeForm: FC = (): ReactElement => {
     register,
     setValue,
     reset,
-    formState: { errors },
+    formState: { errors, isValid, isDirty },
   } = useForm<TEmployeeCreation>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      picture: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      department: '',
-      role: '',
-      salary: 0,
-      hireDate: '',
-      dismissalDate: null,
-    },
+    defaultValues: DEFAULT_VALUES,
   });
 
-  useEffect(() => {
-    console.log({ errors });
-  }, [errors]);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const handleFileChange = (fileURL: string) => {
-    setValue('picture', fileURL);
+  const parseToBase64 = (file: File) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setValue('picture', base64String);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const fileURL = URL.createObjectURL(file);
+      setImagePreview(fileURL);
+      parseToBase64(file);
+    }
   };
 
   const onSubmit: SubmitHandler<TEmployeeCreation> = async (data) => {
@@ -77,7 +90,6 @@ const EmployeeForm: FC = (): ReactElement => {
     } catch (error) {
       console.error(error as Error);
     }
-    console.log(data);
   };
 
   const fetchEmployeeDetails = async (): Promise<void> => {
@@ -89,6 +101,7 @@ const EmployeeForm: FC = (): ReactElement => {
         ? dayjs(data.dismissalDate).toISOString()
         : null,
     });
+    setImagePreview(data.picture);
   };
 
   useEffect(() => {
@@ -110,12 +123,17 @@ const EmployeeForm: FC = (): ReactElement => {
             <Grid container spacing={2}>
               <Grid xs={12} sm={6}>
                 <FormLabel>Avatar *</FormLabel>
+                <Avatar
+                  src={imagePreview || '/default-avatar.png'}
+                  alt="Avatar"
+                  sx={{ width: 100, height: 100, mb: 2 }}
+                />
                 <FormControl error={!!errors.picture}>
                   <input
                     type="file"
                     accept="image/*"
-                    {...register('picture')}
-                    onChange={(event) => handleFileChange(event.target.value)}
+                    name="picture"
+                    onChange={handleFileChange}
                   />
                   {errors.picture && (
                     <Typography color="danger">
@@ -174,7 +192,6 @@ const EmployeeForm: FC = (): ReactElement => {
                   <Controller
                     name="department"
                     control={control}
-                    defaultValue=""
                     render={({ field: { onChange, onBlur, value, ref } }) => (
                       <Select
                         placeholder="Select department *"
@@ -286,10 +303,23 @@ const EmployeeForm: FC = (): ReactElement => {
               </Grid>
             </Grid>
             <Grid textAlign="center" sx={{ mt: 3 }}>
-              <Button type="reset" variant="solid" sx={{ px: 4, mr: 4 }}>
+              <Button
+                type="reset"
+                variant="solid"
+                sx={{ px: 4, mr: 4 }}
+                onClick={() => {
+                  reset(DEFAULT_VALUES);
+                  setImagePreview(null);
+                }}
+              >
                 Clear
               </Button>
-              <Button type="submit" variant="solid" sx={{ px: 4 }}>
+              <Button
+                type="submit"
+                variant="solid"
+                sx={{ px: 4 }}
+                disabled={!isValid || !isDirty}
+              >
                 Submit
               </Button>
             </Grid>
