@@ -27,15 +27,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import useEmployees from '../../../models/employees/useEmployees';
-
 import GoBack from '../../../components/GoBack';
-
 import { DEFAULT_VALUES } from './constants';
-
 import schema from './validations';
-
 import { TEmployeeCreation } from './types';
 import { IEmployeeDetails } from '../../../models/employees/types';
+import styles from './styles'; // Import styles
 
 const EmployeeForm: FC = (): ReactElement => {
   const firstLaunch = useRef<boolean>(true);
@@ -115,8 +112,8 @@ const EmployeeForm: FC = (): ReactElement => {
     <Grid>
       <GoBack styles={{ marginBottom: '24px' }} />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Card variant="outlined" sx={{ maxWidth: 600, mx: 'auto', p: 3 }}>
-          <Typography level="h4" textAlign="center" sx={{ mb: 2 }}>
+        <Card variant="outlined" sx={styles.Card}>
+          <Typography level="h4" sx={styles.Header}>
             Employee Form
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -126,7 +123,7 @@ const EmployeeForm: FC = (): ReactElement => {
                 <Avatar
                   src={imagePreview || '/default-avatar.png'}
                   alt="Avatar"
-                  sx={{ width: 100, height: 100, mb: 2 }}
+                  sx={styles.Avatar}
                 />
                 <FormControl error={!!errors.picture}>
                   <input
@@ -136,7 +133,7 @@ const EmployeeForm: FC = (): ReactElement => {
                     onChange={handleFileChange}
                   />
                   {errors.picture && (
-                    <Typography color="danger">
+                    <Typography sx={styles.FormControlError}>
                       {errors.picture.message}
                     </Typography>
                   )}
@@ -151,7 +148,7 @@ const EmployeeForm: FC = (): ReactElement => {
                     error={!!errors.email}
                   />
                   {errors.email && (
-                    <Typography color="danger">
+                    <Typography sx={styles.FormControlError}>
                       {errors.email.message}
                     </Typography>
                   )}
@@ -165,7 +162,7 @@ const EmployeeForm: FC = (): ReactElement => {
                     error={!!errors.firstName}
                   />
                   {errors.firstName && (
-                    <Typography color="danger">
+                    <Typography sx={styles.FormControlError}>
                       {errors.firstName.message}
                     </Typography>
                   )}
@@ -179,14 +176,14 @@ const EmployeeForm: FC = (): ReactElement => {
                     error={!!errors.lastName}
                   />
                   {errors.lastName && (
-                    <Typography color="danger">
+                    <Typography sx={styles.FormControlError}>
                       {errors.lastName.message}
                     </Typography>
                   )}
                 </FormControl>
               </Grid>
             </Grid>
-            <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid container spacing={2} sx={styles.GridSpacing}>
               <Grid xs={12} sm={5}>
                 <FormControl error={!!errors.department}>
                   <Controller
@@ -209,7 +206,7 @@ const EmployeeForm: FC = (): ReactElement => {
                     )}
                   />
                   {errors.department && (
-                    <Typography color="danger">
+                    <Typography sx={styles.FormControlError}>
                       {errors.department.message}
                     </Typography>
                   )}
@@ -235,7 +232,7 @@ const EmployeeForm: FC = (): ReactElement => {
                     )}
                   />
                   {errors.role && (
-                    <Typography color="danger">
+                    <Typography sx={styles.FormControlError}>
                       {errors.role.message}
                     </Typography>
                   )}
@@ -252,14 +249,14 @@ const EmployeeForm: FC = (): ReactElement => {
                     error={!!errors.salary}
                   />
                   {errors.salary && (
-                    <Typography color="danger">
+                    <Typography sx={styles.FormControlError}>
                       {errors.salary.message}
                     </Typography>
                   )}
                 </FormControl>
               </Grid>
             </Grid>
-            <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid container spacing={2} sx={styles.GridSpacing}>
               <Grid xs={12} sm={6}>
                 <FormControl error={!!errors.hireDate}>
                   <FormLabel>Hire date *</FormLabel>
@@ -277,7 +274,7 @@ const EmployeeForm: FC = (): ReactElement => {
                     )}
                   />
                   {errors.hireDate && (
-                    <Typography color="danger">
+                    <Typography sx={styles.FormControlError}>
                       {errors.hireDate.message}
                     </Typography>
                   )}
@@ -302,11 +299,11 @@ const EmployeeForm: FC = (): ReactElement => {
                 </FormControl>
               </Grid>
             </Grid>
-            <Grid textAlign="center" sx={{ mt: 3 }}>
+            <Grid sx={styles.ButtonContainer}>
               <Button
                 type="reset"
                 variant="solid"
-                sx={{ px: 4, mr: 4 }}
+                sx={styles.ClearButton}
                 onClick={() => {
                   reset(DEFAULT_VALUES);
                   setImagePreview(null);
@@ -317,7 +314,7 @@ const EmployeeForm: FC = (): ReactElement => {
               <Button
                 type="submit"
                 variant="solid"
-                sx={{ px: 4 }}
+                sx={styles.SubmitButton}
                 disabled={!isValid || !isDirty}
               >
                 Submit
